@@ -14,7 +14,7 @@ def predict_and_evaluate():
     df = pd.read_csv("data/all_contracts.csv")
     observed_triangle = create_observed_triangle(df, current_year=2025)
 
-    max_dev = 9
+    max_dev = 10
 
     # Prepare test inputs and true ultimate from raw test_df
     test_df = pd.read_csv("data/test_contracts.csv")
