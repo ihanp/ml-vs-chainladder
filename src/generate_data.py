@@ -9,7 +9,7 @@ def generate_synthetic_contracts(n_contracts=100000, seed=42):
 
     for i in range(n_contracts):
         contract_id = f"C{i:05d}"
-        policy_year = np.random.randint(2010, 2020)
+        policy_year = np.random.randint(2010, 2024)
         ultimate = np.random.uniform(5000, 50000)
         noise = np.random.normal(loc=1.0, scale=0.05, size=10)
         dev_pattern = np.maximum.accumulate(base_curve * noise)
