@@ -44,4 +44,4 @@ if st.button("6️⃣ Plot ML vs Chain Ladder"):
 if st.button("📊 Show Observed Triangle to Predict"):
     df = pd.read_csv("data/all_contracts.csv")
     triangle = create_observed_triangle(df, current_year=2025)
-    st.dataframe(triangle.style.format("{:.0f}").highlight_null(null_color="lightgray"))
+    st.dataframe(triangle)
