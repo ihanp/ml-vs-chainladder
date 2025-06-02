@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
 
+# Load full dataset
+df = pd.read_csv("data/all_contracts.csv")
+
 # Step 1: Create cumulative triangle from training data
 train_df = df[df["policy_year"] <= 2014].copy()
 max_dev = 9
@@ -38,6 +41,7 @@ for year in future_years:
 cl_pred_ultimate = pd.Series(cl_preds, name="CL_predicted_ultimate")
 cl_pred_ultimate.index.name = "policy_year"
 
-# Done
-print("Manual Chain Ladder Ultimate Predictions (2015–2024):")
-display(cl_pred_ultimate)
+# Save for plotting
+cl_pred_ultimate.to_csv("cl_pred_ultimate.csv")
+
+print("Saved Chain Ladder Ultimate Predictions (2015–2024)")
