@@ -32,9 +32,20 @@ def chain_ladder_forecast(observed_triangle):
             if pd.isna(row[next_col]) and pd.notna(row[curr_col]):
                 triangle_filled.loc[year, next_col] = triangle_filled.loc[year, curr_col] * factors[t]
 
-    # Step 4: Extract dev_9 as predicted ultimate
-    cl_pred_ultimate = triangle_filled[f"dev_{max_dev}"].copy()
-    cl_pred_ultimate.name = "CL_predicted_ultimate"
+    # Step 4: Compute predicted ultimate by applying remaining cumulative dev factors to last observed dev
+    cl_pred_ultimate = {}
+    
+    for year, row in triangle.iterrows():
+        observed_devs = row.first_valid_index(), row.last_valid_index()
+        last_observed_index = row.last_valid_index()
+        if last_observed_index is None:
+            continue
+        last_value = row[last_observed_index]
+        dev_start = int(last_observed_index.split("_")[1])
+        cumulative_factor = np.prod(factors[dev_start:])  # Apply all remaining factors
+        cl_pred_ultimate[year] = last_value * cumulative_factor
+    
+    cl_pred_ultimate = pd.Series(cl_pred_ultimate, name="CL_predicted_ultimate")
     cl_pred_ultimate.index.name = "policy_year"
 
     # Save predictions
