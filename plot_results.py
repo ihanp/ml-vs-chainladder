@@ -1,10 +1,11 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
-# Ensure these two Series are available from your earlier blocks:
-# cl_pred_ultimate: Series with policy_year as index, CL predicted ultimate
-# predicted_ultimate: numpy array of predicted values (length = test_df rows)
-# test_df: DataFrame with a "policy_year" column and known true ultimates
+# Load data
+test_df = pd.read_csv("test_contracts.csv")
+predicted_ultimate = np.load("ml_predicted_ultimate.npy")
+cl_pred_ultimate = pd.read_csv("cl_pred_ultimate.csv", index_col=0).squeeze()
 
 # Step 1: Aggregate ML predictions by policy year
 ml_df = pd.DataFrame({
@@ -22,4 +23,5 @@ plt.xlabel("Policy Year")
 plt.ylabel("Total Ultimate Claims")
 plt.legend()
 plt.grid(True)
+plt.tight_layout()
 plt.show()
