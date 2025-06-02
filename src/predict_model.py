@@ -26,9 +26,10 @@ def predict_and_evaluate():
         if year not in observed_triangle.index:
             continue
         row = observed_triangle.loc[year].values
-        observed_dev = min(np.count_nonzero(~np.isnan(row)), max_dev)  # CLIP to max_dev
+        observed_dev = min(np.count_nonzero(~np.isnan(row)), max_dev)
         known = row[:observed_dev]
-        padded_input = list(known) + [0] * (max_dev - observed_dev)
+        # Ensure always 9 inputs (dev_0 to dev_8)
+        padded_input = list(known) + [0] * (9 - len(known))
         X_test.append(padded_input)
         known_paid.append(known[-1] if len(known) > 0 else 0.0)
 
