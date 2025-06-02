@@ -28,29 +28,33 @@ def plot_average_development_curve(triangle, max_dev=9):
     Plots cumulative paid vs development year for the 5 most recent policy years,
     plus the overall average curve. Also returns development factors.
     """
-    plt.figure(figsize=(5, 3))  # Smaller figure size
+    import matplotlib.pyplot as plt
+
+    fig, ax = plt.subplots(figsize=(4, 2.5), dpi=100)  # 📏 Small and sharp
 
     # Get 5 most recent policy years
     recent_years = sorted(triangle.index.astype(int))[-5:]
     
-    # Plot each recent policy year's curve
+    # Plot recent years
     for year in recent_years:
         dev_values = triangle.loc[year].values.astype(float)
-        plt.plot(range(max_dev + 1), dev_values, marker='o', markersize=5, linewidth=1.2, label=f"{int(year)}")
+        ax.plot(range(max_dev + 1), dev_values, marker='o', markersize=4, linewidth=1.2, label=f"{int(year)}")
 
-    # Compute and plot average curve
+    # Average curve
     avg_curve = triangle.mean(skipna=True).values
-    plt.plot(range(max_dev + 1), avg_curve, marker='o', markersize=6, linestyle='--', linewidth=1.8, color='black', label="Average")
+    ax.plot(range(max_dev + 1), avg_curve, marker='o', markersize=5, linestyle='--', linewidth=2, color='black', label="Average")
 
-    plt.title("Development Curves: Recent Policy Years vs. Average", fontsize=11)
-    plt.xlabel("Development Year", fontsize=9)
-    plt.ylabel("Cumulative Paid Amount", fontsize=9)
-    plt.grid(True, linestyle='--', linewidth=0.5, alpha=0.7)
-    plt.legend(title="Policy Year", fontsize=8, title_fontsize=9, bbox_to_anchor=(1.05, 1), loc='upper left')
-    plt.tight_layout()
-    st.pyplot(plt)
+    ax.set_title("Dev Curves: Recent Years vs. Avg", fontsize=9)
+    ax.set_xlabel("Dev Year", fontsize=8)
+    ax.set_ylabel("Cumulative Paid", fontsize=8)
+    ax.tick_params(labelsize=7)
+    ax.grid(True, linestyle='--', linewidth=0.5, alpha=0.6)
+    ax.legend(title="Policy Year", fontsize=7, title_fontsize=8, loc='center left', bbox_to_anchor=(1, 0.5))
 
-    # Compute development factors from average curve
+    plt.tight_layout(pad=1.0)
+    st.pyplot(fig)
+
+    # Compute development factors from average
     dev_factors = []
     for i in range(max_dev):
         if avg_curve[i] == 0 or np.isnan(avg_curve[i]):
