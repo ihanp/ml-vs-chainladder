@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 
 def plot_comparison(predicted_ultimate, test_df):
-    cl_pred_ultimate = pd.read_csv("cl_pred_ultimate.csv", index_col=0).squeeze()
+    cl_pred_ultimate = pd.read_csv("data/cl_pred_ultimate.csv", index_col=0).squeeze()
 
     # Aggregate ML predictions
     ml_df = pd.DataFrame({
