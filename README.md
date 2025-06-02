@@ -9,12 +9,12 @@ The project generates synthetic claims data, trains a multi-layer perceptron (ML
 
 ## 📁 Structure
 
-- `src/generate_data.py`: Creates the synthetic claims dataset.
-- `src/prepare_data.py`: Prepares training data for the ML model.
-- `src/train_model.py`: Trains an MLP to predict residual-to-ultimate claims.
-- `src/predict_model.py`: Evaluates model performance on a test set.
-- `src/chain_ladder.py`: Computes Chain Ladder forecasts.
-- `src/plot_results.py`: Visualizes ML vs. Chain Ladder predictions.
+- `generate_data.py`: Creates the synthetic claims dataset.
+- `prepare_data.py`: Prepares training data for the ML model.
+- `train_model.py`: Trains an MLP to predict residual-to-ultimate claims.
+- `predict_model.py`: Evaluates model performance on a test set.
+- `chain_ladder.py`: Computes Chain Ladder forecasts.
+- `plot_results.py`: Visualizes ML vs. Chain Ladder predictions.
 
 ## 🚀 Deployment
 
