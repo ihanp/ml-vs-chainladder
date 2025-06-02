@@ -5,7 +5,7 @@ This is a fun private project exploring how simple machine learning models compa
 
 The project generates synthetic claims data, trains a multi-layer perceptron (MLP) model on partial development data, and compares its predictions to Chain Ladder estimates.
 
-> **Note**: This is a work in progress and has not undergone a thorough theoretical audit.
+> **Note**: This is only intended as a proof of concept and has not undergone a thorough theoretical audit.
 
 ## 📁 Structure
 
