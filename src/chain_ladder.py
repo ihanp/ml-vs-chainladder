@@ -4,22 +4,25 @@ import numpy as np
 def chain_ladder_forecast(observed_triangle):
     """
     Applies Chain Ladder using a provided observed triangle (with NaNs).
-    Saves final predicted ultimates to data/cl_pred_ultimate.csv.
+    Prints development factors and saves predicted ultimates.
     """
     max_dev = observed_triangle.shape[1] - 1
     triangle = observed_triangle.copy()
 
-    # Step 1: Compute development factors F_t = sum(dev_{t+1}) / sum(dev_t), skipping NaNs
+    # Step 1: Compute development factors, skipping only NaN pairs
     factors = []
+    print("\n Chain Ladder Development Factors:")
     for t in range(max_dev):
-        curr_col = f"dev_{t}"
-        next_col = f"dev_{t + 1}"
-        valid_rows = triangle[[curr_col, next_col]].dropna()
-        num = valid_rows[next_col].sum()
-        denom = valid_rows[curr_col].replace(0, np.nan).sum()
-        factors.append(num / denom)
+        curr = triangle[f"dev_{t}"]
+        nxt = triangle[f"dev_{t + 1}"]
+        valid = (~curr.isna()) & (~nxt.isna())
+        num = nxt[valid].sum()
+        denom = curr[valid].replace(0, np.nan).sum()
+        factor = num / denom
+        factors.append(factor)
+        print(f"  dev_{t} ➝ dev_{t + 1}: {factor:.4f}")
 
-    # Step 2: Forecast missing cells row-wise
+    # Step 2: Fill triangle row-wise
     triangle_filled = triangle.copy()
     for year, row in triangle.iterrows():
         for t in range(max_dev):
@@ -33,7 +36,7 @@ def chain_ladder_forecast(observed_triangle):
     cl_pred_ultimate.name = "CL_predicted_ultimate"
     cl_pred_ultimate.index.name = "policy_year"
 
-    # Save
     cl_pred_ultimate.to_csv("data/cl_pred_ultimate.csv")
-    print("Saved Chain Ladder Ultimate Predictions from observed triangle")
+    print("\n Saved Chain Ladder Ultimate Predictions to data/cl_pred_ultimate.csv")
+
     return cl_pred_ultimate
