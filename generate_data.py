@@ -1,6 +1,6 @@
-
 import numpy as np
 import pandas as pd
+import os
 
 def generate_synthetic_contracts(n_contracts=100000, seed=42):
     np.random.seed(seed)
@@ -33,11 +33,8 @@ def generate_synthetic_contracts(n_contracts=100000, seed=42):
     return pd.DataFrame(data)
 
 if __name__ == "__main__":
+    os.makedirs("data", exist_ok=True)
+
     df = generate_synthetic_contracts()
-    train_df = df[df["policy_year"] <= 2014].reset_index(drop=True)
-    test_df = df[df["policy_year"] > 2014].reset_index(drop=True)
-
-    train_df.to_csv("train_contracts.csv", index=False)
-    test_df.to_csv("test_contracts.csv", index=False)
-
-    print(f"✅ Saved {len(train_df)} training contracts and {len(test_df)} test contracts.")
+    df.to_csv("data/all_contracts.csv", index=False)
+    print("Saved data/all_contracts.csv")
