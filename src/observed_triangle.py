@@ -28,7 +28,7 @@ def plot_average_development_curve(triangle, max_dev=9):
     Plots cumulative paid vs development year for the 5 most recent policy years,
     plus the overall average curve. Also returns development factors.
     """
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(5, 3))  # Smaller figure size
 
     # Get 5 most recent policy years
     recent_years = sorted(triangle.index.astype(int))[-5:]
@@ -36,17 +36,18 @@ def plot_average_development_curve(triangle, max_dev=9):
     # Plot each recent policy year's curve
     for year in recent_years:
         dev_values = triangle.loc[year].values.astype(float)
-        plt.plot(range(max_dev + 1), dev_values, marker='o', label=f"{int(year)}")
+        plt.plot(range(max_dev + 1), dev_values, marker='o', markersize=5, linewidth=1.2, label=f"{int(year)}")
 
     # Compute and plot average curve
     avg_curve = triangle.mean(skipna=True).values
-    plt.plot(range(max_dev + 1), avg_curve, marker='o', linestyle='--', color='black', label="Average")
+    plt.plot(range(max_dev + 1), avg_curve, marker='o', markersize=6, linestyle='--', linewidth=1.8, color='black', label="Average")
 
-    plt.title("Development Curves: Recent Policy Years vs. Average")
-    plt.xlabel("Development Year")
-    plt.ylabel("Cumulative Paid Amount")
-    plt.grid(True)
-    plt.legend(title="Policy Year", bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.title("Development Curves: Recent Policy Years vs. Average", fontsize=11)
+    plt.xlabel("Development Year", fontsize=9)
+    plt.ylabel("Cumulative Paid Amount", fontsize=9)
+    plt.grid(True, linestyle='--', linewidth=0.5, alpha=0.7)
+    plt.legend(title="Policy Year", fontsize=8, title_fontsize=9, bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.tight_layout()
     st.pyplot(plt)
 
     # Compute development factors from average curve
