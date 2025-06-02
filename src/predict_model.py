@@ -30,7 +30,7 @@ def predict_and_evaluate():
         known = row[:observed_dev]
         padded_input = list(known) + [0] * (max_dev - observed_dev)
         X_test.append(padded_input)
-        known_paid.append(known[-1] if known else 0.0)
+        known_paid.append(known[-1] if len(known) > 0 else 0.0)
 
     # Convert to array and scale
     X_test = pd.DataFrame(X_test, columns=[f"dev_{i}" for i in range(max_dev)])
