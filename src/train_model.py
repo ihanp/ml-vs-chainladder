@@ -46,18 +46,3 @@ def train_and_save_model():
     joblib.dump(mlp, "models/mlp_model.pkl")
     joblib.dump(input_scaler, "models/input_scaler.pkl")
     joblib.dump(target_scaler, "models/target_scaler.pkl")
-
-def train_and_save_model():
-    num_epochs = 10 
-
-    progress_bar = st.progress(0)
-    status_text = st.empty()
-
-    for epoch in range(num_epochs):
-        
-        percent_complete = int((epoch + 1) / num_epochs * 100)
-        progress_bar.progress((epoch + 1) / num_epochs)
-        status_text.text(f"{percent_complete}% complete")
-
-    progress_bar.empty()
-    status_text.text("✅ Training complete")
