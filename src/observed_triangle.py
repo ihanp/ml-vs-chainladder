@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import streamlit as st
 
 def create_observed_triangle(df, max_dev=9, current_year=2025):
     """
@@ -20,16 +21,24 @@ def create_observed_triangle(df, max_dev=9, current_year=2025):
         ]
         triangle.loc[year] = observed_row
 
-    # --- Plot: Average Cumulative Development ---
-    avg_cum = triangle.mean(skipna=True)
+def plot_average_development_curve(df, max_dev=9):
+    """
+    Plots average cumulative paid vs development year.
+    """
+    # Compute mean cumulative by development year
+    avg_curve = []
+    for dev in range(max_dev + 1):
+        dev_col = f"dev_{dev}"
+        avg = df[dev_col].mean()
+        avg_curve.append(avg)
 
-    plt.figure(figsize=(10, 5))
-    plt.plot(range(max_dev + 1), avg_cum, marker='o')
-    plt.title("Average Cumulative Payment by Development Year")
+    # Plot with matplotlib
+    plt.figure(figsize=(8, 4))
+    plt.plot(range(max_dev + 1), avg_curve, marker='o')
+    plt.title("Average Cumulative Development Curve")
     plt.xlabel("Development Year")
-    plt.ylabel("Average Cumulative Paid Amount")
+    plt.ylabel("Cumulative Paid Amount")
     plt.grid(True)
-    plt.tight_layout()
-    plt.show()
+    st.pyplot(plt)
 
     return triangle
