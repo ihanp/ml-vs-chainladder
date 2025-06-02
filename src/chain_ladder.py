@@ -42,7 +42,7 @@ def chain_ladder_forecast(observed_triangle):
             continue
         last_value = row[last_observed_index]
         dev_start = int(last_observed_index.split("_")[1])
-        cumulative_factor = np.prod(factors[dev_start:])  # Apply all remaining factors
+        cumulative_factor = np.prod(factors[dev_start + 1:])  # Apply all remaining factors
         cl_pred_ultimate[year] = last_value * cumulative_factor
     
     cl_pred_ultimate = pd.Series(cl_pred_ultimate, name="CL_predicted_ultimate")
