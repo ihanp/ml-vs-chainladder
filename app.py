@@ -5,7 +5,7 @@ from src.train_model import train_and_save_model
 from src.predict_model import predict_and_evaluate
 from src.chain_ladder import chain_ladder_forecast
 from src.plot_results import plot_comparison
-from src.show_prediction_triangle import get_prediction_triangle
+from src.show_triangle import get_prediction_triangle
 
 
 st.set_page_config(layout="wide")
