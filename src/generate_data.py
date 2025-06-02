@@ -9,12 +9,17 @@ def generate_synthetic_contracts(n_contracts=100000, seed=42):
 
     for i in range(n_contracts):
         contract_id = f"C{i:05d}"
-        policy_year = np.random.randint(2010, 2026) #not including 2026
-        ultimate = np.random.uniform(5000, 50000)
+        policy_year = np.random.randint(2010, 2026)
+
+        # Create a realistic development curve
         noise = np.random.normal(loc=1.0, scale=0.05, size=10)
         dev_pattern = np.maximum.accumulate(base_curve * noise)
         dev_pattern = np.clip(dev_pattern, 0, 1)
-        cumulative_paid = np.round(ultimate * dev_pattern)
+
+        # Scale a random base ultimate and then define the true ultimate as dev_9
+        base_ultimate = np.random.uniform(5000, 50000)
+        cumulative_paid = np.round(base_ultimate * dev_pattern)
+        ultimate = cumulative_paid[-1]  # Set ultimate to last dev
 
         row = {
             "contract_id": contract_id,
