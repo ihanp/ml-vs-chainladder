@@ -2,20 +2,6 @@ import pandas as pd
 import numpy as np
 import os
 
-# Load full synthetic data
-df = pd.read_csv("data/all_contracts.csv")
-
-# Split into train and test based on policy year
-train_df = df[df["policy_year"] <= 2014].reset_index(drop=True)
-test_df = df[df["policy_year"] > 2014].reset_index(drop=True)
-
-# Save to CSV
-train_df.to_csv("train_contracts.csv", index=False)
-test_df.to_csv("test_contracts.csv", index=False)
-
-print(f"Saved {len(train_df)} training contracts and {len(test_df)} test contracts.")
-
-
 def create_residual_training_data_varying(df, max_dev=9):
     inputs = []
     targets = []
@@ -36,18 +22,30 @@ def create_residual_training_data_varying(df, max_dev=9):
     return input_df, target_series
 
 
-# Load your full dev training data
-train_df = pd.read_csv("train_contracts.csv")
+def prepare_train_test_split():
+    os.makedirs("data", exist_ok=True)
 
-# Use the improved function that loops over observed_dev from 1 to max_dev - 1
-X_train, y_train = create_residual_training_data_varying(train_df, max_dev=9)
+    # Load full synthetic data
+    df = pd.read_csv("data/all_contracts.csv")
 
-# Save to CSV
-X_train.to_csv("X_train.csv", index=False)
-y_train.to_csv("y_train.csv", index=False)
+    # Split into train and test based on policy year
+    train_df = df[df["policy_year"] <= 2014].reset_index(drop=True)
+    test_df = df[df["policy_year"] > 2014].reset_index(drop=True)
 
-print("Training pairs generated (Residual-to-Ultimate):")
-print("X_train shape:", X_train.shape)
-print("y_train shape:", y_train.shape)
+    # Save to CSV
+    train_df.to_csv("data/train_contracts.csv", index=False)
+    test_df.to_csv("data/test_contracts.csv", index=False)
 
-print(X_train.head())
+    print(f"Saved {len(train_df)} training contracts and {len(test_df)} test contracts.")
+
+    # Create training pairs
+    X_train, y_train = create_residual_training_data_varying(train_df, max_dev=9)
+
+    X_train.to_csv("data/X_train.csv", index=False)
+    y_train.to_csv("data/y_train.csv", index=False)
+
+    print("Training pairs generated (Residual-to-Ultimate):")
+    print("X_train shape:", X_train.shape)
+    print("y_train shape:", y_train.shape)
+
+    return X_train, y_train, test_df
