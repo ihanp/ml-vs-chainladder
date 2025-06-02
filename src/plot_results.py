@@ -1,3 +1,5 @@
+import pandas as pd
+
 def plot_comparison(predicted_ultimate, test_df):
     cl_pred_ultimate = pd.read_csv("data/cl_pred_ultimate.csv", index_col=0).squeeze()
     cl_pred_ultimate.index = cl_pred_ultimate.index.astype(int)  # Ensure index is int
