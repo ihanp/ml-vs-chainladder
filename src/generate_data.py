@@ -28,13 +28,13 @@ def generate_synthetic_contracts(n_contracts=100000, seed=42):
         ultimate = np.random.uniform(5000, 50000)
         cumulative_paid = np.round(custom_curve * ultimate)
 
-        # Guarantee last dev equals ultimate
-        cumulative_paid[-1] = ultimate
-
-        # Optional plateau or drop
+        # plateau or drop
         if np.random.rand() < 0.1:
             cutoff = np.random.randint(4, 9)
             cumulative_paid[cutoff:] = cumulative_paid[cutoff]
+
+        # Guarantee last dev equals ultimate
+        cumulative_paid[-1] = ultimate
 
         # --- Save row ---
         row = {
