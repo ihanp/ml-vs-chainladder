@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import joblib
-from src.observed_triangle import create_observed_triangle
 
 def predict_and_evaluate():
     # Load saved model and scalers
@@ -11,8 +10,6 @@ def predict_and_evaluate():
 
     # Load observed triangle from full data
     df = pd.read_csv("data/all_contracts.csv")
-    observed_triangle = create_observed_triangle(df, current_year=2025)
-
     max_dev = 9
 
     # Prepare test inputs and true ultimate from raw test_df
@@ -22,16 +19,23 @@ def predict_and_evaluate():
     X_test = []
     known_paid = []
     
+    CURRENT_YEAR = 2025
+    
     for _, row in test_df.iterrows():
+        policy_year = int(row["policy_year"])
+        observed_dev = max(0, min(CURRENT_YEAR - policy_year + 1, max_dev))  # e.g. 2025 -> 1 dev
+    
         devs = []
         cum_paid = 0.0
-        for i in range(max_dev):
+        for i in range(observed_dev):
             col = f"dev_{i}"
-            if pd.notna(row.get(col)):
-                devs.append(row[col])
-                cum_paid += row[col]
+            val = row.get(col, np.nan)
+            if pd.notna(val):
+                devs.append(val)
+                cum_paid += val
             else:
-                break
+                break  # fallback: stop at first NA
+    
         padded_input = devs + [0.0] * (max_dev - len(devs))
         X_test.append(padded_input)
         known_paid.append(cum_paid)
