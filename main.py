@@ -1,6 +1,22 @@
-import pandas as pd
-import numpy as np
-from sklearn.neural_network import MLPRegressor
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_absolute_error, mean_squared_error
+
+import os
+
+print("▶ Running generate_data.py...")
+os.system("python generate_data.py")
+
+print("▶ Running prepare_data.py...")
+os.system("python prepare_data.py")
+
+print("▶ Running train_model.py...")
+os.system("python train_model.py")
+
+print("▶ Running predict_model.py...")
+os.system("python predict_model.py")
+
+print("▶ Running chain_ladder.py...")
+os.system("python chain_ladder.py")
+
+print("▶ Running plot_results.py...")
+os.system("python plot_results.py")
+
+print("✅ Workflow complete.")
