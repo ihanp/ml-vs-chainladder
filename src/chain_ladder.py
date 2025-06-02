@@ -1,45 +1,37 @@
 import pandas as pd
 import numpy as np
 
-def chain_ladder_forecast(df):
-    # Step 1: Create cumulative triangle from training data
-    train_df = df[df["policy_year"] <= 2014].copy()
-    max_dev = 9
+def chain_ladder_forecast(df, observed_triangle):
+    """
+    Applies Chain Ladder using a provided observed triangle (with NaNs).
+    Saves final predicted ultimates to data/cl_pred_ultimate.csv.
+    """
+    max_dev = observed_triangle.shape[1] - 1
 
-    triangle = pd.DataFrame(columns=range(max_dev + 1))
-
-    for year in sorted(train_df["policy_year"].unique()):
-        rows = train_df[train_df["policy_year"] == year]
-        dev = rows[[f"dev_{i}" for i in range(max_dev + 1)]].sum().values
-        triangle.loc[year] = dev
+    # Step 1: Use provided triangle instead of creating from df
+    triangle = observed_triangle.copy()
 
     # Step 2: Compute development factors F_t = sum(dev_{t+1}) / sum(dev_t)
+    complete_rows = triangle.dropna()
     factors = []
     for t in range(max_dev):
-        num = triangle[t + 1].sum()
-        denom = triangle[t].replace(0, np.nan).sum()
+        num = complete_rows[t + 1].sum()
+        denom = complete_rows[t].replace(0, np.nan).sum()
         factors.append(num / denom)
 
-    # Step 3: Apply Chain Ladder to incomplete triangle (2015–2024)
-    future_years = sorted(df[df["policy_year"] > 2014]["policy_year"].unique())
-    cl_preds = {}
+    # Step 3: Forecast missing cells row-wise
+    triangle_filled = triangle.copy()
+    for year, row in triangle.iterrows():
+        for t in range(max_dev):
+            if pd.isna(row[t + 1]):
+                triangle_filled.loc[year, t + 1] = triangle_filled.loc[year, t] * factors[t]
 
-    for year in future_years:
-        row = df[df["policy_year"] == year]
-        devs = row[[f"dev_{i}" for i in range(max_dev + 1)]].sum().values
-        latest_dev = max(i for i, val in enumerate(devs) if val > 0)
-        cumulative = devs.copy()
-
-        for t in range(latest_dev, max_dev):
-            cumulative[t + 1] = cumulative[t] * factors[t]
-        
-        cl_preds[year] = cumulative[max_dev]
-
-    # Convert to Series
-    cl_pred_ultimate = pd.Series(cl_preds, name="CL_predicted_ultimate")
+    # Step 4: Extract dev_9 as predicted ultimate
+    cl_pred_ultimate = triangle_filled[max_dev].copy()
+    cl_pred_ultimate.name = "CL_predicted_ultimate"
     cl_pred_ultimate.index.name = "policy_year"
 
-    # Save for plotting
+    # Save
     cl_pred_ultimate.to_csv("data/cl_pred_ultimate.csv")
-
-    print("Saved Chain Ladder Ultimate Predictions (2015–2024)")
+    print("Saved Chain Ladder Ultimate Predictions from observed triangle")
+    return cl_pred_ultimate
