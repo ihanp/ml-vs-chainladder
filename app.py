@@ -34,7 +34,8 @@ if st.button("5️⃣ Predict and Evaluate (Test Set)"):
 
 if st.button("6️⃣ Run Chain Ladder Forecast"):
     df = pd.read_csv("data/all_contracts.csv")
-    chain_ladder_forecast(df)
+    observed_triangle = create_observed_triangle(df, current_year=2025)
+    chain_ladder_forecast(observed_triangle)
     st.success("✅ Chain Ladder predictions saved")
 
 if st.button("7️⃣ Plot ML vs Chain Ladder"):
