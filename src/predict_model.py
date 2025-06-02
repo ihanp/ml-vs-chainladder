@@ -21,17 +21,20 @@ def predict_and_evaluate():
 
     X_test = []
     known_paid = []
-
-    for year in test_df["policy_year"]:
-        if year not in observed_triangle.index:
-            continue
-        row = observed_triangle.loc[year].values
-        observed_dev = min(np.count_nonzero(~np.isnan(row)), max_dev)
-        known = row[:observed_dev]
-        # Ensure always 9 inputs (dev_0 to dev_8)
-        padded_input = list(known) + [0] * (9 - len(known))
+    
+    for _, row in test_df.iterrows():
+        devs = []
+        cum_paid = 0.0
+        for i in range(max_dev):
+            col = f"dev_{i}"
+            if pd.notna(row.get(col)):
+                devs.append(row[col])
+                cum_paid += row[col]
+            else:
+                break
+        padded_input = devs + [0.0] * (max_dev - len(devs))
         X_test.append(padded_input)
-        known_paid.append(known[-1] if len(known) > 0 else 0.0)
+        known_paid.append(cum_paid)
 
     # Convert to array and scale
     X_test = pd.DataFrame(X_test, columns=[f"dev_{i}" for i in range(max_dev)])
