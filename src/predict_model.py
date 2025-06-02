@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import joblib
+from src.observed_triangle import create_observed_triangle
+
 
 def predict_and_evaluate():
     # Load saved model and scalers
@@ -8,26 +10,28 @@ def predict_and_evaluate():
     input_scaler = joblib.load("models/input_scaler.pkl")
     target_scaler = joblib.load("models/target_scaler.pkl")
 
-    # Load test data
-    test_df = pd.read_csv("data/test_contracts.csv")
-    max_dev = 9
-    CURRENT_YEAR = 2025
+    # Load observed triangle from full data
+    df = pd.read_csv("data/all_contracts.csv")
+    observed_triangle = create_observed_triangle(df, current_year=2025)
 
-    # Prepare test inputs dynamically with 9 features (as used in training)
+    max_dev = 9
+
+    # Prepare test inputs and true ultimate from raw test_df
+    test_df = pd.read_csv("data/test_contracts.csv")
+    true_ultimate = test_df["ultimate"].values
+
     X_test = []
-    true_ultimate = []
     known_paid = []
 
-    for _, row in test_df.iterrows():
-        policy_year = row["policy_year"]
-        observed_dev = min(CURRENT_YEAR - policy_year, max_dev)  # max 9 features
-
-        known = [row[f"dev_{i}"] for i in range(observed_dev)]
-        padded_input = known + [0] * (max_dev - observed_dev)  # Ensure 9 inputs
-
+    for year in test_df["policy_year"]:
+        if year not in observed_triangle.index:
+            continue
+        row = observed_triangle.loc[year].values
+        observed_dev = np.count_nonzero(~np.isnan(row))
+        known = row[:observed_dev]
+        padded_input = list(known) + [0] * (max_dev - observed_dev)
         X_test.append(padded_input)
         known_paid.append(known[-1])
-        true_ultimate.append(row["ultimate"])
 
     # Convert to array and scale
     X_test = pd.DataFrame(X_test, columns=[f"dev_{i}" for i in range(max_dev)])
@@ -39,7 +43,7 @@ def predict_and_evaluate():
 
     # Compute final predicted ultimate
     predicted_ultimate = np.array(known_paid) + residual_preds
-    true_ultimate = np.array(true_ultimate)
+    true_ultimate = np.array(true_ultimate[:len(predicted_ultimate)])  # ensure same length
 
     # Evaluate
     abs_error = np.abs(predicted_ultimate - true_ultimate)
