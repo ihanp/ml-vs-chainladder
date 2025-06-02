@@ -20,25 +20,26 @@ def predict_and_evaluate():
     known_paid = []
     
     CURRENT_YEAR = 2025
-    
+
     for _, row in test_df.iterrows():
         policy_year = int(row["policy_year"])
-        observed_dev = max(0, min(CURRENT_YEAR - policy_year + 1, max_dev))  # e.g. 2025 -> 1 dev
+        observed_dev = max(0, min(CURRENT_YEAR - policy_year + 1, max_dev))  # e.g., 2025 → 1 dev
     
-        devs = []
-        cum_paid = 0.0
+        cumulative = []
         for i in range(observed_dev):
-            col = f"dev_{i}"
-            val = row.get(col, np.nan)
+            val = row.get(f"dev_{i}", np.nan)
             if pd.notna(val):
-                devs.append(val)
-                cum_paid += val
+                cumulative.append(val)
             else:
-                break  # fallback: stop at first NA
+                break
     
-        padded_input = devs + [0.0] * (max_dev - len(devs))
+        # Last value in observed cumulative is known paid
+        cum_paid = cumulative[-1] if cumulative else 0.0
+    
+        padded_input = cumulative + [0.0] * (max_dev - len(cumulative))
         X_test.append(padded_input)
         known_paid.append(cum_paid)
+
 
     # Convert to array and scale
     X_test = pd.DataFrame(X_test, columns=[f"dev_{i}" for i in range(max_dev)])
