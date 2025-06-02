@@ -37,3 +37,11 @@ if st.button("6️⃣ Plot ML vs Chain Ladder"):
     predicted_ultimate = np.load("data/ml_predicted_ultimate.npy")
     test_df = pd.read_csv("data/test_contracts.csv")
     plot_comparison(predicted_ultimate, test_df)
+
+from src.show_triangle import get_training_triangle
+
+# Show cumulative triangle
+if st.button("📐 Show Training Triangle (Cumulative Paid)"):
+    triangle = get_training_triangle()
+    st.subheader("Training Triangle")
+    st.dataframe(triangle)
