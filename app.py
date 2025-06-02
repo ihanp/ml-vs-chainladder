@@ -20,13 +20,18 @@ if st.button("1️⃣ Generate Synthetic Data"):
 if st.button("2️⃣ Show Observed Triangle"):
     df = pd.read_csv("data/all_contracts.csv")
     triangle = create_observed_triangle(df, current_year=2025)
+
     st.subheader("Observed Triangle (Cumulative Paid per Policy Year × Dev Year)")
-    st.dataframe(triangle)
+    styled_triangle = triangle.style.format("{:,.0f}").background_gradient(cmap="Blues", axis=None)
+    st.dataframe(styled_triangle, use_container_width=True)
+
     st.subheader("Average Development Curve")
     dev_factors = plot_average_development_curve(triangle)
-    st.subheader("Development Factors")
-    st.dataframe(dev_factors)
 
+    st.subheader("Development Factors")
+    styled_factors = dev_factors.to_frame().style.format("{:.3f}").background_gradient(cmap="Oranges")
+    st.dataframe(styled_factors, use_container_width=True)
+    
 if st.button("3️⃣ Prepare Data (Train/Test + Features)"):
     prepare_train_test_split()
     st.success("✅ Data split and training pairs saved")
