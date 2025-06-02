@@ -1,9 +1,6 @@
-import matplotlib.pyplot as plt
-import pandas as pd
-import streamlit as st
-
 def plot_comparison(predicted_ultimate, test_df):
     cl_pred_ultimate = pd.read_csv("data/cl_pred_ultimate.csv", index_col=0).squeeze()
+    cl_pred_ultimate.index = cl_pred_ultimate.index.astype(int)  # Ensure index is int
 
     # Aggregate ML predictions
     ml_df = pd.DataFrame({
@@ -23,5 +20,4 @@ def plot_comparison(predicted_ultimate, test_df):
     plt.grid(True)
     plt.tight_layout()
 
-    # Display in Streamlit
     st.pyplot(plt)
