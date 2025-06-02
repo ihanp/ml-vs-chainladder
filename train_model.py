@@ -1,8 +1,15 @@
+import pandas as pd
+import joblib
+import os
 from sklearn.neural_network import MLPRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 import numpy as np
+
+# Load training data
+X_train = pd.read_csv("X_train.csv")
+y_train = pd.read_csv("y_train.csv")
 
 # Split into training and validation sets
 X_tr, X_val, y_tr, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
@@ -32,3 +39,9 @@ rmse = np.sqrt(mean_squared_error(y_val, y_pred))
 
 print(f"Validation MAE (residual): {mae:.2f}")
 print(f"Validation RMSE (residual): {rmse:.2f}")
+
+# Save model and scalers
+os.makedirs("models", exist_ok=True)
+joblib.dump(mlp, "models/mlp_model.pkl")
+joblib.dump(input_scaler, "models/input_scaler.pkl")
+joblib.dump(target_scaler, "models/target_scaler.pkl")
