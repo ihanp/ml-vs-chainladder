@@ -29,7 +29,7 @@ def predict_and_evaluate():
         row = observed_triangle.loc[year].values
         observed_dev = np.count_nonzero(~np.isnan(row))
         known = row[:observed_dev]
-        padded_input = known + [0] * ((max_dev + 1) - observed_dev)
+        padded_input = list(known) + [0] * (max_dev - observed_dev)
         X_test.append(padded_input)
         known_paid.append(known[-1])
 
