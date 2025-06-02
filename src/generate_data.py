@@ -11,29 +11,32 @@ def generate_synthetic_contracts(n_contracts=100000, seed=42):
         contract_id = f"C{i:05d}"
         policy_year = np.random.randint(2010, 2026)
 
-        # --- Add per-contract shape noise (curve distortion) ---
-        shape_shift = np.random.normal(1.0, 0.1)
-        curve = base_curve ** shape_shift
+        # --- Break chain ladder assumption: devs not multiplicative ---
+        # Create non-monotonic or erratic base pattern with random bumps
+        bumps = np.random.normal(0, 0.02, size=10)
+        custom_curve = base_curve + bumps
+        custom_curve = np.clip(custom_curve, 0, 1)
+        custom_curve = np.maximum.accumulate(custom_curve)  # still cumulative
 
-        # --- Add multiplicative noise to simulate volatility ---
-        noise = np.random.normal(loc=1.0, scale=0.05, size=10)
-        dev_pattern = np.maximum.accumulate(curve * noise)
-        dev_pattern = np.clip(dev_pattern, 0, 1)
+        # --- Add disruptive noise to mid-devs ---
+        disruption_index = np.random.randint(2, 8)
+        custom_curve[disruption_index:] += np.random.normal(0, 0.03)
+        custom_curve = np.clip(custom_curve, 0, 1)
+        custom_curve = np.maximum.accumulate(custom_curve)
 
-        # --- Create base ultimate ---
-        base_ultimate = np.random.uniform(5000, 50000)
-        cumulative_paid = np.round(base_ultimate * dev_pattern)
+        # --- Force ultimate to match last cumulative ---
+        ultimate = np.random.uniform(5000, 50000)
+        cumulative_paid = np.round(custom_curve * ultimate)
 
-        # --- Optional: simulate plateauing or claim cutoff ---
-        if np.random.rand() < 0.05:
+        # Guarantee last dev equals ultimate
+        cumulative_paid[-1] = ultimate
+
+        # Optional plateau or drop
+        if np.random.rand() < 0.1:
             cutoff = np.random.randint(4, 9)
             cumulative_paid[cutoff:] = cumulative_paid[cutoff]
 
-        # --- Set ultimate to final dev (or slightly perturbed) ---
-        ultimate = cumulative_paid[-1] + np.random.normal(0, 250)
-        ultimate = max(ultimate, cumulative_paid[-1])  # Ensure non-decreasing
-
-        # --- Build row as before ---
+        # --- Save row ---
         row = {
             "contract_id": contract_id,
             "policy_year": policy_year,
