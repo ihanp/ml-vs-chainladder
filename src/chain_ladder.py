@@ -7,26 +7,29 @@ def chain_ladder_forecast(observed_triangle):
     Saves final predicted ultimates to data/cl_pred_ultimate.csv.
     """
     max_dev = observed_triangle.shape[1] - 1
-
-    # Step 1: Use provided triangle directly
     triangle = observed_triangle.copy()
 
-    # Step 2: Compute development factors F_t = sum(dev_{t+1}) / sum(dev_t), skipping NaNs
+    # Step 1: Compute development factors F_t = sum(dev_{t+1}) / sum(dev_t), skipping NaNs
     factors = []
     for t in range(max_dev):
-        num = triangle.iloc[:, t + 1].sum(skipna=True)
-        denom = triangle.iloc[:, t].replace(0, np.nan).sum(skipna=True)
+        curr_col = f"dev_{t}"
+        next_col = f"dev_{t + 1}"
+        valid_rows = triangle[[curr_col, next_col]].dropna()
+        num = valid_rows[next_col].sum()
+        denom = valid_rows[curr_col].replace(0, np.nan).sum()
         factors.append(num / denom)
 
-    # Step 3: Forecast missing cells row-wise
+    # Step 2: Forecast missing cells row-wise
     triangle_filled = triangle.copy()
     for year, row in triangle.iterrows():
         for t in range(max_dev):
-            if pd.isna(row[t + 1]):
-                triangle_filled.loc[year, t + 1] = triangle_filled.loc[year, t] * factors[t]
+            curr_col = f"dev_{t}"
+            next_col = f"dev_{t + 1}"
+            if pd.isna(row[next_col]):
+                triangle_filled.loc[year, next_col] = triangle_filled.loc[year, curr_col] * factors[t]
 
-    # Step 4: Extract dev_9 as predicted ultimate
-    cl_pred_ultimate = triangle_filled[max_dev].copy()
+    # Step 3: Extract dev_9 as predicted ultimate
+    cl_pred_ultimate = triangle_filled[f"dev_{max_dev}"].copy()
     cl_pred_ultimate.name = "CL_predicted_ultimate"
     cl_pred_ultimate.index.name = "policy_year"
 
