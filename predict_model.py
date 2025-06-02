@@ -1,5 +1,11 @@
 import numpy as np
 import pandas as pd
+import joblib
+
+# Load saved model and scalers
+mlp = joblib.load("models/mlp_model.pkl")
+input_scaler = joblib.load("models/input_scaler.pkl")
+target_scaler = joblib.load("models/target_scaler.pkl")
 
 # Load test data
 test_df = pd.read_csv("test_contracts.csv")
@@ -41,3 +47,6 @@ rmse = np.sqrt(np.mean((predicted_ultimate - true_ultimate) ** 2))
 
 print(f"Test MAE (Ultimate): {mae:.2f}")
 print(f"Test RMSE (Ultimate): {rmse:.2f}")
+
+# Optional: Save for later plotting
+np.save("ml_predicted_ultimate.npy", predicted_ultimate)
