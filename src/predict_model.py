@@ -3,7 +3,6 @@ import pandas as pd
 import joblib
 from src.observed_triangle import create_observed_triangle
 
-
 def predict_and_evaluate():
     # Load saved model and scalers
     mlp = joblib.load("models/mlp_model.pkl")
@@ -27,11 +26,11 @@ def predict_and_evaluate():
         if year not in observed_triangle.index:
             continue
         row = observed_triangle.loc[year].values
-        observed_dev = np.count_nonzero(~np.isnan(row))
+        observed_dev = min(np.count_nonzero(~np.isnan(row)), max_dev)  # CLIP to max_dev
         known = row[:observed_dev]
         padded_input = list(known) + [0] * (max_dev - observed_dev)
         X_test.append(padded_input)
-        known_paid.append(known[-1])
+        known_paid.append(known[-1] if known else 0.0)
 
     # Convert to array and scale
     X_test = pd.DataFrame(X_test, columns=[f"dev_{i}" for i in range(max_dev)])
