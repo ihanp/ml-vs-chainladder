@@ -4,7 +4,8 @@ import streamlit as st
 
 def plot_comparison(predicted_ultimate, test_df):
     cl_pred_ultimate = pd.read_csv("data/cl_pred_ultimate.csv", index_col=0).squeeze()
-    cl_pred_ultimate.index = cl_pred_ultimate.index.astype(int)  # Ensure index is int
+    cl_pred_ultimate.index = cl_pred_ultimate.index.astype(int)
+    cl_pred_ultimate = pd.to_numeric(cl_pred_ultimate, errors='coerce')
 
     # Aggregate ML predictions
     ml_df = pd.DataFrame({
@@ -12,6 +13,12 @@ def plot_comparison(predicted_ultimate, test_df):
         "ml_predicted_ultimate": predicted_ultimate
     })
     ml_agg = ml_df.groupby("policy_year")["ml_predicted_ultimate"].sum()
+
+    print("Chain Ladder Head:")
+    print(cl_pred_ultimate.head())
+    
+    print("\nML Aggregated Head:")
+    print(ml_agg.head())
 
     # Plot
     plt.figure(figsize=(12, 6))
