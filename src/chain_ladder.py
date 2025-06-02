@@ -40,7 +40,7 @@ def chain_ladder_forecast(observed_triangle):
         last_observed_index = row.last_valid_index()
         if last_observed_index is None:
             continue
-        last_value = row[last_observed_index]
+        last_value = triangle_filled.loc[year, last_observed_index]
         dev_start = int(last_observed_index.split("_")[1])
         cumulative_factor = np.prod(factors[dev_start + 1:])  # Apply all remaining factors
         cl_pred_ultimate[year] = last_value * cumulative_factor
