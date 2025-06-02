@@ -6,28 +6,34 @@ from src.predict_model import predict_and_evaluate
 from src.chain_ladder import chain_ladder_forecast
 from src.plot_results import plot_comparison
 
-st.title("ML vs Chain Ladder: Claims Forecasting")
+st.set_page_config(layout="wide")
+st.title("🚗 ML vs Chain Ladder: Claims Forecasting")
 
-if st.button("Generate Synthetic Data"):
+if st.button("1️⃣ Generate Synthetic Data"):
     generate_synthetic_contracts()
-    st.success("Synthetic data generated.")
+    st.success("✅ Synthetic data generated and saved to data/all_contracts.csv")
 
-if st.button("Prepare Data"):
+if st.button("2️⃣ Prepare Data (Train/Test + Features)"):
     prepare_train_test_split()
-    st.success("Data prepared for training.")
+    st.success("✅ Data split and training pairs saved")
 
-if st.button("Train Model"):
+if st.button("3️⃣ Train ML Model"):
     train_and_save_model()
-    st.success("Model trained and saved.")
+    st.success("✅ MLP model trained and saved to models/")
 
-if st.button("Predict and Evaluate"):
+if st.button("4️⃣ Predict and Evaluate (Test Set)"):
     predict_and_evaluate()
-    st.success("Prediction and evaluation completed.")
+    st.success("✅ Predictions generated and test metrics printed")
 
-if st.button("Chain Ladder Forecast"):
-    chain_ladder_forecast()
-    st.success("Chain Ladder forecast completed.")
+if st.button("5️⃣ Run Chain Ladder Forecast"):
+    import pandas as pd
+    df = pd.read_csv("data/all_contracts.csv")
+    chain_ladder_forecast(df)
+    st.success("✅ Chain Ladder predictions saved")
 
-if st.button("Plot Results"):
-    plot_comparison()
-    st.success("Results plotted.")
+if st.button("6️⃣ Plot ML vs Chain Ladder"):
+    import numpy as np
+    import pandas as pd
+    predicted_ultimate = np.load("data/ml_predicted_ultimate.npy")
+    test_df = pd.read_csv("data/test_contracts.csv")
+    plot_comparison(predicted_ultimate, test_df)
