@@ -5,7 +5,7 @@ from src.train_model import train_and_save_model
 from src.predict_model import predict_and_evaluate
 from src.chain_ladder import chain_ladder_forecast
 from src.plot_results import plot_comparison
-from src.show_triangle import get_prediction_triangle
+from src.observed_triangle import create_observed_triangle
 
 
 st.set_page_config(layout="wide")
@@ -40,7 +40,7 @@ if st.button("6️⃣ Plot ML vs Chain Ladder"):
     test_df = pd.read_csv("data/test_contracts.csv")
     plot_comparison(predicted_ultimate, test_df)
 
-if st.button("🔍 Show Triangle to Predict (2015–2024)"):
-    pred_triangle = get_prediction_triangle()
-    st.subheader("Observed Triangle for Prediction (2015–2024)")
-    st.dataframe(pred_triangle)
+if st.button("📊 Show Observed Triangle to Predict"):
+    df = pd.read_csv("data/all_contracts.csv")
+    triangle = create_observed_triangle(df, current_year=2025)
+    st.dataframe(triangle.style.format("{:.0f}").highlight_null(None, color="lightgray"))
