@@ -11,7 +11,7 @@ def predict_and_evaluate():
     # Load test data
     test_df = pd.read_csv("data/test_contracts.csv")
     max_dev = 9
-    CURRENT_YEAR = 2024
+    CURRENT_YEAR = 2025
 
     # Prepare test inputs dynamically with 9 features (as used in training)
     X_test = []
