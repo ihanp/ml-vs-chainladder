@@ -20,11 +20,14 @@ if st.button("1️⃣ Generate Synthetic Data"):
 if st.button("2️⃣ Show Observed Triangle"):
     df = pd.read_csv("data/all_contracts.csv")
     triangle = create_observed_triangle(df, current_year=2025)
+    st.subheader("Observed Triangle (Cumulative Paid per Policy Year × Dev Year)")
     st.dataframe(triangle)
-    df = pd.read_csv("data/all_contracts.csv")
-    st.title("Synthetic Claims Data - Development Pattern")
-    if st.checkbox("Show Development Curve"):
-        plot_average_development_curve(df)
+
+    if st.checkbox("Show Average Development Curve + Factors"):
+        st.subheader("Average Development Curve")
+        dev_factors = plot_average_development_curve(triangle)
+        st.subheader("Development Factors")
+        st.dataframe(dev_factors)
 
 if st.button("3️⃣ Prepare Data (Train/Test + Features)"):
     prepare_train_test_split()
