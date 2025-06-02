@@ -1,3 +1,4 @@
+import pandas as pd
 import streamlit as st
 from src.generate_data import generate_synthetic_contracts
 from src.prepare_data import prepare_train_test_split
