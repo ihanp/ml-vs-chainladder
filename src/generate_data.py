@@ -10,43 +10,44 @@ def generate_synthetic_contracts(n_contracts=100000, seed=42):
     for i in range(n_contracts):
         contract_id = f"C{i:05d}"
         policy_year = np.random.randint(2010, 2026)
-
-        # --- Strong disruption ---
         curve = base_curve.copy()
 
-        # Add noisy fluctuations
-        bumps = np.random.normal(0, 0.05, size=10)
-        curve += bumps
+        # 💥 Heavy random noise
+        curve += np.random.normal(0, 0.1, size=10)
 
-        # Occasionally reverse or scramble
-        if np.random.rand() < 0.2:
+        # 🔁 30% chance of flip or full scramble
+        p = np.random.rand()
+        if p < 0.15:
+            curve = curve[::-1]
+        elif p < 0.30:
             curve = np.random.permutation(curve)
 
-        # Blend with reversed base to simulate distorted reporting
-        if np.random.rand() < 0.2:
-            curve = 0.5 * curve + 0.5 * base_curve[::-1]
+        # 🌀 Blend with reversed or noisy base
+        if np.random.rand() < 0.3:
+            noise_base = base_curve[::-1] + np.random.normal(0, 0.1, size=10)
+            curve = 0.5 * curve + 0.5 * noise_base
 
-        # Inject random shocks
-        for _ in range(np.random.randint(2, 5)):
+        # ⚡ Massive shocks (5–10 shocks)
+        for _ in range(np.random.randint(5, 11)):
             idx = np.random.randint(1, 9)
-            shock = np.random.uniform(-0.2, 0.3)
+            shock = np.random.uniform(-0.4, 0.5)
             curve[idx:] += shock
 
-        # Clip to [0, 1] and re-cumulate
+        # 🚫 40% chance of early plateau/drop
+        if np.random.rand() < 0.4:
+            cutoff = np.random.randint(2, 9)
+            curve[cutoff:] = curve[cutoff]
+
+        # 🧽 Cleanup: clip and make cumulative
         curve = np.clip(curve, 0, 1)
         curve = np.maximum.accumulate(curve)
 
-        # Add some flat lines or early cutoffs
-        if np.random.rand() < 0.2:
-            cutoff = np.random.randint(3, 8)
-            curve[cutoff:] = curve[cutoff]
-
-        # Set ultimate and scale
+        # 💰 Final cumulative paid
         ultimate = np.random.uniform(5000, 50000)
         cumulative_paid = np.round(curve * ultimate).astype(float)
-        cumulative_paid[-1] = ultimate  # Ensure final dev = ultimate
+        cumulative_paid[-1] = ultimate
 
-        # --- Save row ---
+        # 📦 Build row
         row = {
             "contract_id": contract_id,
             "policy_year": policy_year,
@@ -59,5 +60,5 @@ def generate_synthetic_contracts(n_contracts=100000, seed=42):
     df = pd.DataFrame(data)
     os.makedirs("data", exist_ok=True)
     df.to_csv("data/all_contracts.csv", index=False)
-    print("✅ Saved data/all_contracts.csv with heavy disruption.")
+    print("💣 Saved data/all_contracts.csv with **extreme** disruption.")
     return df
