@@ -51,6 +51,12 @@ def predict_and_evaluate():
 
     print(f"Test MAE (Ultimate): {mae:.2f}")
     print(f"Test RMSE (Ultimate): {rmse:.2f}")
+    print("Sample known paid values:", known_paid[:5])
+    print("Sample scaled input values:", X_test_scaled[:3])
+    print("Sample residuals (rescaled):", residual_preds[:3])
+    print("Sample predicted ultimate:", predicted_ultimate[:3])
+    print("Residual stats:")
+    print("Min:", residual_preds.min(), "Max:", residual_preds.max(), "Mean:", residual_preds.mean())
 
     # Save for plotting
     np.save("data/ml_predicted_ultimate.npy", predicted_ultimate)
