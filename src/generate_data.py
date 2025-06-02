@@ -12,15 +12,26 @@ def generate_synthetic_contracts(n_contracts=100000, seed=42):
         policy_year = np.random.randint(2010, 2026)
 
         # --- Break chain ladder assumption: devs not multiplicative ---
-        # Create non-monotonic or erratic base pattern with random bumps
-        bumps = np.random.normal(0, 0.02, size=10)
+        # Create erratic base pattern with bumps, spikes, and reversals
+        bumps = np.random.normal(0, 0.03, size=10)
         custom_curve = base_curve + bumps
         custom_curve = np.clip(custom_curve, 0, 1)
-        custom_curve = np.maximum.accumulate(custom_curve)  # still cumulative
 
-        # --- Add disruptive noise to mid-devs ---
-        disruption_index = np.random.randint(2, 8)
-        custom_curve[disruption_index:] += np.random.normal(0, 0.03)
+        # Occasionally flip or blend the curve to simulate reporting distortion
+        if np.random.rand() < 0.1:
+            custom_curve = 0.3 * custom_curve[::-1] + 0.7 * custom_curve
+
+        # Spike a random dev year to simulate late shock
+        if np.random.rand() < 0.3:
+            spike = np.random.randint(2, 8)
+            custom_curve[spike] += np.random.uniform(0.05, 0.2)
+
+        # Add larger disruptive noise to multiple random points
+        for _ in range(np.random.randint(1, 3)):
+            idx = np.random.randint(2, 8)
+            custom_curve[idx:] += np.random.normal(0, 0.05)
+
+        # Clip and make cumulative again
         custom_curve = np.clip(custom_curve, 0, 1)
         custom_curve = np.maximum.accumulate(custom_curve)
 
