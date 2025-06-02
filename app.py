@@ -7,6 +7,8 @@ from src.predict_model import predict_and_evaluate
 from src.chain_ladder import chain_ladder_forecast
 from src.plot_results import plot_comparison
 from src.observed_triangle import create_observed_triangle
+from src.observed_triangle import plot_average_development_curve
+
 
 st.set_page_config(layout="wide")
 st.title("🚗 ML vs Chain Ladder: Claims Forecasting")
@@ -19,6 +21,10 @@ if st.button("2️⃣ Show Observed Triangle"):
     df = pd.read_csv("data/all_contracts.csv")
     triangle = create_observed_triangle(df, current_year=2025)
     st.dataframe(triangle)
+    df = pd.read_csv("data/all_contracts.csv")
+    st.title("Synthetic Claims Data - Development Pattern")
+    if st.checkbox("Show Development Curve"):
+        plot_average_development_curve(df)
 
 if st.button("3️⃣ Prepare Data (Train/Test + Features)"):
     prepare_train_test_split()
