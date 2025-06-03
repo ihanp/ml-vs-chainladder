@@ -1,57 +1,28 @@
-Machine Learning vs Chain Ladder: Claims Forecasting
-This is a hands-on project exploring how simple machine learning models compare to classical Chain Ladder methods for forecasting ultimate insurance claims.
 
-The project generates synthetic claims triangle data, trains a multi-layer perceptron (MLP) on partial development patterns, and compares ML predictions with traditional Chain Ladder forecasts. The system is fully deployed on AWS, supporting both interactive visualization and real-time prediction via API.
+# ML vs Chain Ladder: Claims Forecasting
 
-Note: This is a proof of concept using synthetic data. It is not a production-ready actuarial model and has not undergone theoretical audit.
+This is a private fun project exploring how simple machine learning models compare to classical Chain Ladder methods for forecasting ultimate insurance claims.
 
-📁 Project Structure
-src/generate_data.py: Creates synthetic individual contract-level claims data.
+The project generates synthetic claims data, trains a multi-layer perceptron (MLP) model on partial development data, and compares its predictions to Chain Ladder estimates.
 
-src/prepare_data.py: Prepares train/test splits and model input formats.
+> **Note**: This is only intended as a proof of concept and has not undergone a thorough theoretical audit.
 
-src/train_model.py: Trains an MLP model to predict residuals to ultimate.
+## 📁 Structure
 
-src/predict_model.py: Evaluates model predictions against true ultimates.
+- `src/generate_data.py`: Creates the synthetic claims dataset.
+- `src/prepare_data.py`: Prepares training data for the ML model.
+- `src/train_model.py`: Trains an MLP to predict residual-to-ultimate claims.
+- `src/predict_model.py`: Evaluates model performance on a test set.
+- `src/chain_ladder.py`: Computes Chain Ladder forecasts.
+- `src/plot_results.py`: Visualizes ML vs. Chain Ladder predictions.
 
-src/chain_ladder.py: Computes classic Chain Ladder development estimates.
+## 🚀 Deployment
 
-src/plot_results.py: Visualizes ML vs. Chain Ladder results.
+Deployment to AWS (e.g., for visualization or inference API) is currently in progress.
 
-app.py: Streamlit dashboard for local or EC2 deployment.
+## 🔮 Future Scope
 
-☁️ AWS Cloud Deployment
-The project includes a full AWS deployment for both visualization and inference:
-
-Architecture:
-EC2 – hosts the Streamlit web app (live demo)
-
-S3 – stores model artifacts and synthetic data
-
-Lambda + Docker + ECR – containerized model inference endpoint
-
-API Gateway – provides public HTTP access to the model
-
-IAM + VPC – secure networking and access control
-
-CloudWatch – logs and monitors Lambda + EC2 activity
-
-Live Resources:
-🔗 GitHub: github.com/ihanprasetyo/ml-vs-chainladder
-
-🌐 Web App: Streamlit (EC2)
-
-🧠 API Endpoint: Public prediction API via AWS API Gateway
-
-🔮 Future Scope
-Integrate a PostgreSQL database for IFRS/Solvency II reporting
-
-Generate realistic payment and reporting patterns
-
-Build dashboards for solvency monitoring and planning
-
-Add support for more complex models (e.g., attention-based)
-
-Extend to real-world datasets (when available)
-
-Fine-tune cost and security architecture
+- Creation of a relational database for IFRS accounting and SST/Solvency II balance sheets
+- Generation of payment patterns for liquidity, capital, and financial planning
+- Automation of solvency calculations and reporting
+- AI-driven analytics across actuarial and finance use cases
