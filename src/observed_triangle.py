@@ -31,7 +31,7 @@ def plot_average_development_curve(triangle, max_dev=9):
     import matplotlib.pyplot as plt
     import streamlit as st
 
-    fig, ax = plt.subplots(figsize=(3.5, 2), dpi=110)  # Smaller and sharper
+    fig, ax = plt.subplots(figsize=(2, 1), dpi=50)  # Smaller and sharper
 
     # Get 9 most recent policy years
     recent_years = sorted(triangle.index.astype(int))[-9:]
@@ -45,12 +45,12 @@ def plot_average_development_curve(triangle, max_dev=9):
     avg_curve = triangle.mean(skipna=True).values
     ax.plot(range(max_dev + 1), avg_curve, marker='o', markersize=3.5, linestyle='--', linewidth=1.5, color='black', label="Average")
 
-    ax.set_title("Dev Curves: Recent Years vs. Avg", fontsize=8)
-    ax.set_xlabel("Dev Year", fontsize=7)
-    ax.set_ylabel("Cumulative Paid", fontsize=7)
-    ax.tick_params(labelsize=6)
+    ax.set_title("Dev Curves: Recent Years vs. Avg", fontsize=6)
+    ax.set_xlabel("Dev Year", fontsize=5)
+    ax.set_ylabel("Cumulative Paid", fontsize=5)
+    ax.tick_params(labelsize=4)
     ax.grid(True, linestyle='--', linewidth=0.4, alpha=0.5)
-    ax.legend(title="Policy Year", fontsize=5.5, title_fontsize=6.5, loc='center left', bbox_to_anchor=(1, 0.5))
+    ax.legend(title="Policy Year", fontsize=3.5, title_fontsize=4.5, loc='center left', bbox_to_anchor=(1, 0.5))
 
     plt.tight_layout(pad=0.6)
     st.pyplot(fig)
