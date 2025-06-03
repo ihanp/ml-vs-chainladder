@@ -7,13 +7,15 @@ The pipeline generates synthetic claims triangle data, trains a multi-layer perc
 
 The project also includes a full AWS deployment for inference and visualization, integrating:
 
-- 🔁 **Lambda** with a custom Docker image
-- 🧠 **Model and scaler loading** from S3
-- 🔐 **Secure infrastructure** using IAM and VPC
-- 🔍 **Real-time monitoring** via CloudWatch
-- 🌐 **Public inference endpoint** via API Gateway
-- 🖥️ **Interactive web app** served from EC2 with Streamlit
-- 📦 **Containerized model code** with ECR
+- 🔁 **Lambda** with a custom Docker image  
+- 🧠 **Model and scaler loading** from S3  
+- 🔐 **Secure infrastructure** using IAM and VPC  
+- 🔍 **Real-time monitoring** via CloudWatch  
+- 🌐 **Public inference endpoint** via API Gateway  
+- 🖥️ **Interactive web app** served from EC2 with Streamlit  
+- 📦 **Containerized model code** with ECR  
+
+🔗 **Live demo**: [http://56.228.14.152:8501/](http://56.228.14.152:8501/)
 
 > **Note**: This project is for educational/demo purposes only and has not been reviewed for actuarial or regulatory rigor.
 
