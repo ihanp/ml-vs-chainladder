@@ -17,21 +17,26 @@ def plot_comparison(predicted_ultimate, test_df):
     # Aggregate true ultimate values
     true_agg = test_df.groupby("policy_year")["ultimate"].sum()
 
+    # Filter from 2015 onward
+    cl_pred_ultimate = cl_pred_ultimate[cl_pred_ultimate.index >= 2015]
+    ml_agg = ml_agg[ml_agg.index >= 2015]
+    true_agg = true_agg[true_agg.index >= 2015]
+
     print("Chain Ladder Head:")
     print(cl_pred_ultimate.head())
 
     print("\nML Aggregated Head:")
     print(ml_agg.head())
 
-    print("\nTrue Aggregated Head:")
+    print("\nSimulated Aggregated Head:")
     print(true_agg.head())
 
     # Plot
     plt.figure(figsize=(12, 6))
     plt.plot(cl_pred_ultimate.index, cl_pred_ultimate.values, label="Chain Ladder", marker='o')
     plt.plot(ml_agg.index, ml_agg.values, label="ML Predicted", marker='x')
-    plt.plot(true_agg.index, true_agg.values, label="Ground Truth", marker='s', linestyle='--')
-    plt.title("Ultimate Claims Prediction: Chain Ladder vs ML vs Ground Truth")
+    plt.plot(true_agg.index, true_agg.values, label="Simulated", marker='s', linestyle='--')
+    plt.title("Ultimate Claims Prediction: Chain Ladder vs ML vs Simulated")
     plt.xlabel("Policy Year")
     plt.ylabel("Total Ultimate Claims")
     plt.legend()
