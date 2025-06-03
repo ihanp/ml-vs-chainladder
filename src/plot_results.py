@@ -32,7 +32,7 @@ def plot_comparison(predicted_ultimate, test_df):
     print(true_agg.head())
 
     # Plot
-    plt.figure(figsize=(6, 3))
+    plt.figure(figsize=(30, 15))
     plt.plot(cl_pred_ultimate.index, cl_pred_ultimate.values, label="Chain Ladder", marker='o')
     plt.plot(ml_agg.index, ml_agg.values, label="ML Predicted", marker='x')
     plt.plot(true_agg.index, true_agg.values, label="Simulated", marker='s', linestyle='--')
