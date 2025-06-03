@@ -7,6 +7,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 import numpy as np
 
+from src.s3_utils import upload_model_to_s3 
+
 def train_and_save_model():
     # Load training data
     X_train = pd.read_csv("data/X_train.csv")
@@ -40,8 +42,15 @@ def train_and_save_model():
     print(f"Validation MAE (residual): {mae:.2f}")
     print(f"Validation RMSE (residual): {rmse:.2f}")
 
-    # Save model and scalers
+    # Save locally
     os.makedirs("models", exist_ok=True)
     joblib.dump(mlp, "models/mlp_model.pkl")
     joblib.dump(input_scaler, "models/input_scaler.pkl")
     joblib.dump(target_scaler, "models/target_scaler.pkl")
+
+    # Upload to S3
+    upload_model_to_s3(mlp, "mlp_model.pkl")
+    upload_model_to_s3(input_scaler, "input_scaler.pkl")
+    upload_model_to_s3(target_scaler, "target_scaler.pkl")
+
+    print(" Model and scalers uploaded to S3.")
