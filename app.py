@@ -13,9 +13,9 @@ from src.observed_triangle import plot_average_development_curve
 st.set_page_config(layout="wide")
 st.title("🚗 ML vs Chain Ladder: Claims Forecasting")
 
-if st.button("1️⃣ Generate Synthetic Data"):
+if st.button("1️⃣ Click here first to simulate claims"):
     generate_synthetic_contracts()
-    st.success("✅ Synthetic data generated and saved to data/all_contracts.csv")
+    st.success("✅ Synthetic data generated and saved to data/all_contracts.csv. Click step 2 to view the created claims triangle")
 
 if st.button("2️⃣ Show Observed Triangle"):
     df = pd.read_csv("data/all_contracts.csv")
@@ -31,27 +31,30 @@ if st.button("2️⃣ Show Observed Triangle"):
     st.subheader("Development Factors")
     styled_factors = dev_factors.to_frame().style.format("{:.3f}").background_gradient(cmap="Oranges")
     st.dataframe(styled_factors, use_container_width=True)
+    st.success("✅ Click step 3 to prepare the data for ML training")
     
 if st.button("3️⃣ Prepare Data (Train/Test + Features)"):
     prepare_train_test_split()
-    st.success("✅ Data split and training pairs saved")
+    st.success("✅ Data split and training pairs saved. Click step 4 to start training the ML model")
 
 if st.button("4️⃣ Train ML Model"):
     train_and_save_model()
-    st.success("✅ MLP model trained and saved to models/")
+    st.success("✅ MLP model trained and saved to models/. Click step 5 to use the model to predict the test set")
 
 if st.button("5️⃣ Predict and Evaluate (Test Set)"):
     predict_and_evaluate()
-    st.success("✅ Predictions generated and test metrics printed")
+    st.success("✅ Predictions generated and test metrics printed. Click step 6 to generate the traditional Chain Ladder method as comparison")
 
 if st.button("6️⃣ Run Chain Ladder Forecast"):
     df = pd.read_csv("data/all_contracts.csv")
     observed_triangle = create_observed_triangle(df, current_year=2025)
     chain_ladder_forecast(observed_triangle)
-    st.success("✅ Chain Ladder predictions saved")
+    st.success("✅ Chain Ladder predictions saved. Click step 7 to compare the ML results with the traditional CL method")
 
 if st.button("7️⃣ Plot ML vs Chain Ladder"):
     import numpy as np
     predicted_ultimate = np.load("data/ml_predicted_ultimate.npy")
     test_df = pd.read_csv("data/test_contracts.csv")
     plot_comparison(predicted_ultimate, test_df)
+    st.success("✅ Finished!! Click step 1 again if you wish to test it again with another set of data")
+
