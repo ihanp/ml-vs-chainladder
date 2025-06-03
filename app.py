@@ -28,9 +28,6 @@ if st.button("2️⃣ Show Observed Triangle"):
     st.subheader("Average Development Curve")
     dev_factors = plot_average_development_curve(triangle)
 
-    st.subheader("Development Factors")
-    styled_factors = dev_factors.to_frame().style.format("{:.3f}").background_gradient(cmap="Oranges")
-    st.dataframe(styled_factors, use_container_width=True)
     st.success("✅ Click step 3 to prepare the data for ML training")
     
 if st.button("3️⃣ Prepare Data (Train/Test + Features)"):
