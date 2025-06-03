@@ -40,7 +40,7 @@ if st.button("3️⃣ Prepare Data (Train/Test + Features)"):
     prepare_train_test_split()
     st.success("✅ Data split and training pairs saved. Click step 4 to start training the ML model")
 
-if st.button("4️⃣ Train ML Model"):
+if st.button("4️⃣ Train Machine Learning Model"):
     train_and_save_model()
     st.success("✅ MLP model trained and saved to models/. Click step 5 to use the model to predict the test set")
 
