@@ -12,42 +12,42 @@ def generate_synthetic_contracts(n_contracts=1000):
         policy_year = np.random.randint(2010, 2026)
         curve = base_curve.copy()
 
-        # 💥 Heavy random noise
+        # Heavy random noise
         curve += np.random.normal(0, 0.1, size=10)
 
-        # 🔁 30% chance of flip or full scramble
+        # 30% chance of flip or full scramble
         p = np.random.rand()
         if p < 0.15:
             curve = curve[::-1]
         elif p < 0.30:
             curve = np.random.permutation(curve)
 
-        # 🌀 Blend with reversed or noisy base
+        # Blend with reversed or noisy base
         if np.random.rand() < 0.3:
             noise_base = base_curve[::-1] + np.random.normal(0, 0.1, size=10)
             curve = 0.5 * curve + 0.5 * noise_base
 
-        # ⚡ Massive shocks (5–10 shocks)
+        # Shocks (5–10 shocks)
         for _ in range(np.random.randint(5, 11)):
             idx = np.random.randint(1, 9)
             shock = np.random.uniform(-0.4, 0.5)
             curve[idx:] += shock
 
-        # 🚫 40% chance of early plateau/drop
+        # 40% chance of early plateau/drop
         if np.random.rand() < 0.4:
             cutoff = np.random.randint(2, 9)
             curve[cutoff:] = curve[cutoff]
 
-        # 🧽 Cleanup: clip and make cumulative
+        # Cleanup: clip and make cumulative
         curve = np.clip(curve, 0, 1)
         curve = np.maximum.accumulate(curve)
 
-        # 💰 Final cumulative paid
+        # Final cumulative paid
         ultimate = np.random.uniform(5000, 50000)
         cumulative_paid = np.round(curve * ultimate).astype(float)
         cumulative_paid[-1] = ultimate
 
-        # 📦 Build row
+        # Build row
         row = {
             "contract_id": contract_id,
             "policy_year": policy_year,
