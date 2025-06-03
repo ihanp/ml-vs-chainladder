@@ -3,7 +3,7 @@ import pandas as pd
 import os
 
 def generate_synthetic_contracts(n_contracts=1000):
-    np.random.seed(seed)
+    np.random.seed()
     base_curve = np.array([0.25, 0.45, 0.60, 0.70, 0.78, 0.85, 0.90, 0.94, 0.97, 1.00])
     data = []
 
