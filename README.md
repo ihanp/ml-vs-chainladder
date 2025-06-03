@@ -1,7 +1,7 @@
 
 # ML vs Chain Ladder: Claims Forecasting
 
-This is a fun private project exploring how simple machine learning models compare to classical Chain Ladder methods for forecasting ultimate insurance claims.
+This is a private fun project exploring how simple machine learning models compare to classical Chain Ladder methods for forecasting ultimate insurance claims.
 
 The project generates synthetic claims data, trains a multi-layer perceptron (MLP) model on partial development data, and compares its predictions to Chain Ladder estimates.
 
