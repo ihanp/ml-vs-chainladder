@@ -16,7 +16,7 @@ from src.s3_utils import (
 
 
 st.set_page_config(layout="wide")
-st.title("🚗 ML vs Chain Ladder: Claims Forecasting")
+st.title("🚗 Machine Learning vs Chain Ladder: Claims Forecasting")
 
 if st.button("1️⃣ Click here first to simulate claims"):
     df = generate_synthetic_contracts()
